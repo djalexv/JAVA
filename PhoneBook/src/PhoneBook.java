@@ -4,27 +4,70 @@ import java.util.Scanner;
 public class PhoneBook {
 
     public static void main(String[] args) {
-        Scanner inData = new Scanner(System.in);
-        boolean isCorrectName = false;
-//        System.out.println(inData.delimiter().toString());
-        while (!isCorrectName) {
-            System.out.println("Введите ФИО через пробелы");
-            String rawName = inData.nextLine(); //Считывает строку из System.in
-            String[] nameArray = firstCharUp(splitName(rawName));
-            System.out.println(Arrays.toString(nameArray));
+//        String[] currentNameArray = getName();
+//        System.out.println(Arrays.toString(currentNameArray));
+        String currentNumber = getNumber();
+        System.out.println("000 "+currentNumber);
 
-            if (nameArray.length == 3) {
-                isCorrectName = true;
+
+    }
+
+    private static String getNumber() {
+        String phoneNumber = "";
+        Scanner inData = new Scanner(System.in);
+        boolean isCorrectNumber = false;
+        while (!isCorrectNumber) {
+            System.out.println("Введите номер телефона - 11 цифр. Первая 7 или 8");
+            phoneNumber = cleanPhoneNumber(inData.nextLine()); //Считывает строку из System.in
+//            phoneNumber = cleanPhoneNumber(phoneNumber);
+            isCorrectNumber = checkPhoneNumberIsCorrect(phoneNumber); //checkPhoneNumberIsCorrect(phoneNumber);
+            if (!isCorrectNumber) {
+                System.out.println("Введите корректный номер!");
+            } else {
+                inData.close();
+//                phoneNumber = formatPhoneNumber(phoneNumber);
+//                System.out.println();
+                System.out.println("11 " + phoneNumber+ " 22 "+formatNumber(phoneNumber));
+
             }
-/*
+        }
+        return phoneNumber;
+    }
+
+    private static String cleanPhoneNumber(String phoneNumber) {
+        return phoneNumber.replaceAll("[^0-9]", "");
+    }
+
+    private static boolean checkPhoneNumberIsCorrect(String phoneNumber) {
+        return cleanPhoneNumber(phoneNumber).length() == 11
+                && (phoneNumber.charAt(0) == '7' || phoneNumber.charAt(0) == '8');
+    }
+
+    private static String formatNumber(String phoneNumber) {
+        return "+7" + " " + phoneNumber.substring(1, 4) + " " +
+                phoneNumber.substring(4, 7) + " " + phoneNumber.substring(7, 9) + " " + phoneNumber.substring(9);
+    }
+
+    public static String[] getName() {
+        String resSting = "";
+        String[] nameArray = new String[3];
+//        Scanner inData = new Scanner(System.in);
+        Scanner inData = new Scanner("перров петр инванович");
+        boolean isCorrectName = false;
+        while (!isCorrectName) {
+            System.out.println("Введите ФИО (3 слова) через пробелы");
+            String rawName = inData.nextLine(); //Считывает строку из System.in
+            nameArray = firstCharUp(splitName(rawName));
+//            System.out.println(Arrays.toString(nameArray));
+            isCorrectName = nameArray.length == 3;
             if (!isCorrectName) {
                 System.out.println("Введите корректное имя!");
-            } else {
-                System.out.println(formatName(rawName));
+                inData.close();
             }
-*/
         }
+        return nameArray;
     }
+
 
     public static String[] firstCharUp(String[] resStr) {
         String result = "";
