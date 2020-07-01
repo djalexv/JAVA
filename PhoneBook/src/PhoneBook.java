@@ -2,6 +2,7 @@ public class PhoneBook {
 
     public static void main(String[] args) {
         //Добавить считывание ввода пользователя в цикле
+        //rjvtyn
     }
 
     public static boolean checkPhoneNumber(String phoneNumber) {
