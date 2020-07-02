@@ -10,7 +10,7 @@ public class PhoneBook {
             String[] currentLine = new String[2];
             String[] currentNameArray = getName();
 
-            if ( currentNameArray[0] == "Stop") {
+            if (currentNameArray[0].equals("Stop")) {
                 System.out.println("Работа с программой закончена");
                 break;
             }
@@ -18,7 +18,7 @@ public class PhoneBook {
             currentLine[0] = stringArrayToString(currentNameArray);
             currentLine[1] = getNumber();
 
-            if ( currentLine[1] == "Stop") {
+            if (currentLine[1].equals("Stop")) {
                 System.out.println("Работа с программой закончена");
                 break;
             }
@@ -43,9 +43,11 @@ public class PhoneBook {
         System.out.println("-------------------------------------------------------------------------");
     }
 
+/*
     private static int nameInBook(ArrayList<String[][]> phoneBook, String[][] currentLine) {
         return phoneBook.indexOf(currentLine);
     }
+*/
 
     private static String getNumber() {
         String phoneNumber = "";
@@ -98,7 +100,6 @@ public class PhoneBook {
             System.out.println("Введите ФИО (3 слова) через пробелы\nДля выхода из программы нажмите \"c\"");
             Scanner inData = new Scanner(System.in);
             String rawName = inData.nextLine(); //Считывает строку из System.in
-            char firstSymbol = rawName.charAt(0);
             if (isStop(rawName)) {
                 resNameArray[0] = "Stop";
                 break;
@@ -151,8 +152,8 @@ public class PhoneBook {
 
     private static String stringArrayToString(String[] array) {
         String resStr = "";
-        for (int i = 0; i < array.length; i++) {
-            resStr += (array[i] + " ");
+        for (String s : array) {
+            resStr += (s + " ");
         }
         resStr = resStr.trim();
         return resStr;
@@ -160,15 +161,14 @@ public class PhoneBook {
 
     public static void printRecord(ArrayList<String[]> array, int indx) {
         if (indx>=0 && indx < array.size()) {
-//            System.out.println(Arrays.toString(array.get(indx)));
             System.out.println(array.get(indx)[0] + ": " + array.get(indx)[1]);
         }
     }
 
-    private static char getChar() {
+/*    private static char getChar() {
         Scanner scanner = new Scanner(System.in);
         char operation = scanner.next().charAt(0);
         scanner.close();
         return operation;
-    }
+    }*/
 }
