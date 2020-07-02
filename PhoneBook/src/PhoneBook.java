@@ -5,8 +5,8 @@ import java.util.Scanner;
 public class PhoneBook {
 
     public static void main(String[] args) {
+        ArrayList<String[]> phoneBook = new ArrayList<String[]>();
         while (true) {
-            ArrayList<String[]> phoneBook = new ArrayList<String[]>();
             String[] currentLine = new String[2];
             String[] currentNameArray = getName();
 
@@ -18,22 +18,29 @@ public class PhoneBook {
             currentLine[0] = stringArrayToString(currentNameArray);
             currentLine[1] = getNumber();
 
-            System.out.println(Arrays.toString(currentNameArray));
-            System.out.println(stringArrayToString(currentNameArray) + " " + currentLine[1]);
-            System.out.println("phoneBook.indexOf(currentLine) -> " + phoneBook.indexOf(currentLine) + " phoneBook.contains(currentLine) -> " + phoneBook.contains(currentLine));
+            if ( currentLine[1] == "Stop") {
+                System.out.println("Работа с программой закончена");
+                break;
+            }
+//            System.out.println(Arrays.toString(currentNameArray));
+//            System.out.println(stringArrayToString(currentNameArray) + " " + currentLine[1]);
+//            System.out.println("phoneBook.indexOf(currentLine) -> " + phoneBook.indexOf(currentLine) + " phoneBook.contains(currentLine) -> " + phoneBook.contains(currentLine));
 
             int currentIndex = phoneBook.indexOf(currentLine);
             if (currentIndex == -1) {
                 phoneBook.add(currentLine);
                 System.out.println("Человек с ФИО - \"" + currentLine[0] + "\" и телефоном \"" + currentLine[1] +
-                        "\" добавлен в справочник");
+                        "\" добавлен в телефонную книгу");
             } else {
-                System.out.println("Человек с таким ФИО уже есть в справочнике.\nНомер его телефона - " + currentLine[1]);
+                System.out.println("Человек с таким ФИО уже есть в телефонной книге.\nНомер его телефона - " + currentLine[1]);
             }
-            list(phoneBook);
-            break;
-
         }
+        System.out.println("\nПечать телефонной книги");
+        System.out.println("-------------------------------------------------------------------------");
+        System.out.println("|Фамилия Имя Отчество: Телефон                                          |" );
+        System.out.println("-------------------------------------------------------------------------");
+        list(phoneBook);
+        System.out.println("-------------------------------------------------------------------------");
     }
 
     private static int nameInBook(ArrayList<String[][]> phoneBook, String[][] currentLine) {
@@ -42,20 +49,25 @@ public class PhoneBook {
 
     private static String getNumber() {
         String phoneNumber = "";
-//        Scanner inData = new Scanner(System.in);
-        Scanner inData = new Scanner("79138882509");
+//        Scanner inData = new Scanner("79138882509");
         boolean isCorrectNumber = false;
         while (!isCorrectNumber) {
-            System.out.println("Введите номер телефона - 11 цифр. Первая 7 или 8");
-            phoneNumber = cleanPhoneNumber(inData.nextLine()); //Считывает строку из System.in
-//            phoneNumber = cleanPhoneNumber(phoneNumber);
-            isCorrectNumber = checkPhoneNumber(phoneNumber); //checkPhoneNumberIsCorrect(phoneNumber);
+            System.out.println("Введите номер телефона - 11 цифр. Первая 7 или 8.\nДля выхода из программы нажмите \"c\"");
+            Scanner inData = new Scanner(System.in);
+            String rawNumber = inData.nextLine(); //Считывает строку из System.in
+//            inData.close();
+            if (isStop(rawNumber)) {
+                phoneNumber="Stop";
+                break;
+            }
+            rawNumber = cleanPhoneNumber(rawNumber);
+            isCorrectNumber = checkPhoneNumber(rawNumber); //checkPhoneNumberIsCorrect(phoneNumber);
             if (!isCorrectNumber) {
                 System.out.println("Введите корректный номер!");
+            }else {
+                phoneNumber = formatPhoneNumber(rawNumber);
             }
         }
-        inData.close();
-        phoneNumber = formatPhoneNumber(phoneNumber);
         return phoneNumber;
     }
 
@@ -73,22 +85,24 @@ public class PhoneBook {
                 phoneNumber.substring(4, 7) + " " + phoneNumber.substring(7, 9) + " " + phoneNumber.substring(9);
     }
 
+    public static boolean isStop(String rawData) {
+        char firstSymbol = rawData.charAt(0);
+        return  (firstSymbol == 'C' || firstSymbol == 'С' || firstSymbol == 'с' || firstSymbol ==  'c');
+    }
+
     public static String[] getName() {
         String[] resNameArray = new String[3];
-//        Scanner inData = new Scanner(System.in);
-        Scanner inData = new Scanner("перров петр инванович");
+//        Scanner inData = new Scanner("перров петр инванович");
         boolean isCorrectName = false;
         while (!isCorrectName) {
             System.out.println("Введите ФИО (3 слова) через пробелы\nДля выхода из программы нажмите \"c\"");
+            Scanner inData = new Scanner(System.in);
             String rawName = inData.nextLine(); //Считывает строку из System.in
             char firstSymbol = rawName.charAt(0);
-            if (firstSymbol == 'C' || firstSymbol == 'С' || firstSymbol == 'с' || firstSymbol ==  'c') {
-                for (int i = 0; i < resNameArray.length ; i++) {
-                    resNameArray[i] = "Stop";
-                }
+            if (isStop(rawName)) {
+                resNameArray[0] = "Stop";
                 break;
             }
-
             String[] nameArray = firstCharUp(splitName(rawName));
 //            System.out.println(Arrays.toString(nameArray));
             isCorrectName = nameArray.length == 3;
@@ -96,7 +110,7 @@ public class PhoneBook {
                 System.out.println("Введите корректное имя!");
             }else resNameArray = nameArray;
         }
-        inData.close();
+//        inData.close();
         return resNameArray;
     }
 
@@ -122,12 +136,12 @@ public class PhoneBook {
     }*/
 
 
-    public static String[][]  add(String[][] book, String name, String number) {
+/*    public static String[][]  add(String[][] book, String name, String number) {
         String[][] workBook = Arrays.copyOf(book,book.length+1);
         workBook[workBook.length-1][0] = name;
         workBook[workBook.length-1][1] = number;
         return workBook;
-    }
+    }*/
 
     public static void list(ArrayList<String[]> array) {
         for (int i = 0; i < array.size(); i++) {
@@ -146,7 +160,8 @@ public class PhoneBook {
 
     public static void printRecord(ArrayList<String[]> array, int indx) {
         if (indx>=0 && indx < array.size()) {
-            System.out.println(array.get(indx).toString());
+//            System.out.println(Arrays.toString(array.get(indx)));
+            System.out.println(array.get(indx)[0] + ": " + array.get(indx)[1]);
         }
     }
 
